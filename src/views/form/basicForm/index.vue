@@ -127,6 +127,7 @@ export default {
         if (!err) {
           console.log('Received values of form: ', values)
         }
+        console.log('Received values of form: ', values)
       })
     }
   }

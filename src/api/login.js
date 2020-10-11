@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
-  Logout: '/auth/logout',
+  Login: '/login',
+  Logout: '/logout',
   ForgePassword: '/auth/forge-password',
   Register: '/auth/register',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
   // get my info
-  UserInfo: '/user/info',
+  UserInfo: '/user/v2',
   UserMenu: '/user/nav'
 }
 
@@ -25,10 +25,13 @@ const userApi = {
  * @returns {*}
  */
 export function login (parameter) {
+  var param = new FormData()
+  param.append('username', parameter.username)
+  param.append('password', parameter.password)
   return request({
     url: userApi.Login,
     method: 'post',
-    data: parameter
+    data: param
   })
 }
 

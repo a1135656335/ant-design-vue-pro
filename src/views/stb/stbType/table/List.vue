@@ -40,6 +40,10 @@
         </a-row>
       </a-form>
     </div>
+    <a-divider />
+    <div class="table-operator">
+      <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
+    </div>
 
     <s-table
       ref="table"
@@ -49,8 +53,25 @@
       :data="loadData">
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleEdit(record)">详情</a>
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
         </template>
+        <a-dropdown>
+          <a class="ant-dropdown-link">
+            更多 <a-icon type="down" />
+          </a>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <a @click="handleDetail(record)">详情</a>
+            </a-menu-item>
+            <a-menu-item v-if="$auth('table.disable')">
+              <a href="javascript:;">禁用</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a @click="showDeleteConfirm (record)">删除</a>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </span>
     </s-table>
   </div>
@@ -60,7 +81,7 @@
 import moment from 'moment'
 import { STable } from '@/components'
 import { getRoleList } from '@/api/manage'
-
+import notification from 'ant-design-vue/es/notification'
 import request from '@/utils/request'
 
 export default {
@@ -152,7 +173,12 @@ export default {
   methods: {
     tableOption () {
     },
-
+    handleAdd (record) {
+      this.$emit('onAdd', record)
+    },
+    handleDetail (record) {
+      this.$emit('onDetail', record)
+    },
     handleEdit (record) {
       console.log(`record: ${JSON.stringify(record)}`)
       this.$emit('onEdit', record)
@@ -177,6 +203,35 @@ export default {
       this.queryParam = {
         date: moment(new Date())
       }
+    },
+    showDeleteConfirm (record) {
+      var thisLocal = this
+      this.$confirm({
+        title: '警告',
+        content: `真的要删除 ${record.stbType} 吗? `,
+        okText: '删除',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk () {
+          // 在这里调用删除接口
+          return request({
+            url: `/stb/stbType/${record.id}/v1`,
+            method: 'delete'
+          }).then(ret => {
+            if (ret.statusCode === 2000) {
+              thisLocal.$message.success(ret.msg)
+            } else {
+              notification.error({
+                message: '删除失败',
+                description: ret.msg
+              })
+            }
+          })
+        },
+        onCancel () {
+          console.log('Cancel')
+        }
+      })
     }
   },
   watch: {

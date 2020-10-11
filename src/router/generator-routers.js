@@ -14,9 +14,13 @@ const constantRouterComponents = {
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
 
+  // 首页
+  'Home': () => import('@/views/home'),
+
   // 你需要动态引入的页面组件
-  'Workplace': () => import('@/views/dashboard/Workplace'),
-  'Analysis': () => import('@/views/dashboard/Analysis'),
+  'Brand': () => import('@/views/stb/brand'),
+  'Model': () => import('@/views/stb/model'),
+  'StbType': () => import('@/views/stb/stbType'),
 
   // form
   'BasicForm': () => import('@/views/form/basicForm'),
@@ -31,12 +35,6 @@ const constantRouterComponents = {
   'SearchArticles': () => import('@/views/list/search/Article'),
   'SearchProjects': () => import('@/views/list/search/Projects'),
   'SearchApplications': () => import('@/views/list/search/Applications'),
-  'ProfileBasic': () => import('@/views/profile/basic'),
-  'ProfileAdvanced': () => import('@/views/profile/advanced/Advanced'),
-
-  // result
-  'ResultSuccess': () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
-  'ResultFail': () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
 
   // exception
   'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
@@ -65,8 +63,8 @@ const rootRouter = {
   key: '',
   name: 'index',
   path: '',
-  component: 'BasicLayout',
-  redirect: '/dashboard',
+  component: 'Home',
+  redirect: '/home',
   meta: {
     title: '首页'
   },

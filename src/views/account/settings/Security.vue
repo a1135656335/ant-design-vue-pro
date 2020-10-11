@@ -1,7 +1,8 @@
 <template>
+<div>
   <a-list
-    itemLayout="horizontal"
-    :dataSource="data"
+      itemLayout="horizontal"
+      :dataSource="data"
   >
     <a-list-item slot="renderItem" slot-scope="item, index" :key="index">
       <a-list-item-meta>
@@ -15,9 +16,9 @@
       <template v-if="item.actions">
         <a slot="actions" @click="item.actions.callback">{{ item.actions.title }}</a>
       </template>
-
     </a-list-item>
   </a-list>
+</div>
 </template>
 
 <script>

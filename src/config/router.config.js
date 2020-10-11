@@ -1,6 +1,6 @@
 // eslint-disable-next-line
-import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
-import { bxAnaalyse } from '@/core/icons'
+import { UserLayout, BasicLayout } from '@/layouts'
+import { stb, brand, model, stbType } from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -14,37 +14,44 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/dashboard/workplace',
+    redirect: '/home',
     children: [
+      // home
+      {
+        path: '/home',
+        name: 'home',
+        hidden: true,
+        meta: { title: '首页', keepAlive: true, icon: stb, permission: [ 'home' ] },
+        component: () => import('@/views/home')
+      },
       // dashboard
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        redirect: '/dashboard/workplace',
+        path: '/stb',
+        name: 'stb',
+        redirect: '/stb/brand',
         component: RouteView,
-        meta: { title: 'menu.dashboard', keepAlive: true, icon: bxAnaalyse, permission: [ 'dashboard' ] },
+        meta: { title: '光猫机顶盒', keepAlive: true, icon: stb, permission: [ 'stb' ] },
         children: [
           {
-            path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',
-            name: 'Analysis',
-            component: () => import('@/views/dashboard/Analysis'),
-            meta: { title: 'menu.dashboard.analysis', keepAlive: false, permission: [ 'dashboard' ] }
-          },
-          // 外部链接
-          {
-            path: 'https://www.baidu.com/',
-            name: 'Monitor',
-            meta: { title: 'menu.dashboard.monitor', target: '_blank' }
+            path: '/stb/brand',
+            name: 'brand',
+            component: () => import('@/views/stb/brand'),
+            meta: { title: 'menu.stb.brand', keepAlive: true, icon: brand, permission: [ 'stb' ] }
           },
           {
-            path: '/dashboard/workplace',
-            name: 'Workplace',
-            component: () => import('@/views/dashboard/Workplace'),
-            meta: { title: 'menu.dashboard.workplace', keepAlive: true, permission: [ 'dashboard' ] }
+            path: '/stb/model',
+            name: 'model',
+            component: () => import('@/views/stb/model'),
+            meta: { title: 'menu.stb.model', keepAlive: true, icon: model, permission: [ 'stb' ] }
+          },
+          {
+            path: '/stb/stbType',
+            name: 'stbType',
+            component: () => import('@/views/stb/stbType'),
+            meta: { title: 'menu.stb.stbType', keepAlive: true, icon: stbType, permission: [ 'stb' ] }
           }
         ]
       },
-
       // forms
       {
         path: '/form',
@@ -130,52 +137,6 @@ export const asyncRouterMap = [
         ]
       },
 
-      // profile
-      {
-        path: '/profile',
-        name: 'profile',
-        component: RouteView,
-        redirect: '/profile/basic',
-        meta: { title: '详情页', icon: 'profile', permission: [ 'profile' ] },
-        children: [
-          {
-            path: '/profile/basic',
-            name: 'ProfileBasic',
-            component: () => import('@/views/profile/basic'),
-            meta: { title: '基础详情页', permission: [ 'profile' ] }
-          },
-          {
-            path: '/profile/advanced',
-            name: 'ProfileAdvanced',
-            component: () => import('@/views/profile/advanced/Advanced'),
-            meta: { title: '高级详情页', permission: [ 'profile' ] }
-          }
-        ]
-      },
-
-      // result
-      {
-        path: '/result',
-        name: 'result',
-        component: RouteView,
-        redirect: '/result/success',
-        meta: { title: '结果页', icon: 'check-circle-o', permission: [ 'result' ] },
-        children: [
-          {
-            path: '/result/success',
-            name: 'ResultSuccess',
-            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
-            meta: { title: '成功', keepAlive: false, hiddenHeaderContent: true, permission: [ 'result' ] }
-          },
-          {
-            path: '/result/fail',
-            name: 'ResultFail',
-            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
-            meta: { title: '失败', keepAlive: false, hiddenHeaderContent: true, permission: [ 'result' ] }
-          }
-        ]
-      },
-
       // Exception
       {
         path: '/exception',
@@ -211,6 +172,7 @@ export const asyncRouterMap = [
         component: RouteView,
         redirect: '/account/center',
         name: 'account',
+        hidden: true,
         meta: { title: '个人页', icon: 'user', keepAlive: true, permission: [ 'user' ] },
         children: [
           {
