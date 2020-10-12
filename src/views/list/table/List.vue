@@ -100,7 +100,8 @@ export default {
         },
         {
           title: '类型',
-          dataIndex: 'stbType'
+          dataIndex: 'stbType',
+          sorter: true
         },
         {
           title: '价格（元）',

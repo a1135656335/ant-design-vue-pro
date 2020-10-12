@@ -121,7 +121,8 @@ export default {
         },
         {
           title: '类型',
-          dataIndex: 'stbType'
+          dataIndex: 'stbType',
+          sorter: true
         },
         {
           title: '价格（元）',
@@ -220,6 +221,7 @@ export default {
           }).then(ret => {
             if (ret.statusCode === 2000) {
               thisLocal.$message.success(ret.msg)
+              thisLocal.$refs.table.refresh(true)
             } else {
               notification.error({
                 message: '删除失败',

@@ -1,6 +1,12 @@
 <template>
   <a-card :bordered="false">
-    <component @onEdit="handleEdit" @onGoBack="handleGoBack" :record="record" :is="currentComponet"></component>
+    <component
+        @onAdd="handleAdd"
+        @onDetail="handleDetail"
+        @onEdit="handleEdit"
+        @onGoBack="handleGoBack"
+        :record="record"
+        :is="currentComponet"></component>
   </a-card>
 </template>
 
@@ -10,12 +16,17 @@
   // 动态切换组件
   import List from './table/List'
   import Edit from './table/Edit'
+  import Detail from './table/Detail'
+  import Add from './table/Add'
+
   export default {
     name: 'TableListWrapper',
     components: {
       AInput,
       ATextarea,
+      Add,
       List,
+      Detail,
       Edit
     },
     data () {
@@ -27,6 +38,16 @@
     created () {
     },
     methods: {
+      handleAdd (record) {
+        this.record = record || ''
+        this.currentComponet = 'Add'
+        console.log(record)
+      },
+      handleDetail (record) {
+        this.record = record || ''
+        this.currentComponet = 'Detail'
+        console.log(record)
+      },
       handleEdit (record) {
         this.record = record || ''
         this.currentComponet = 'Edit'

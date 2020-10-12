@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-form :form="form" @submit="handleSubmit">
+    <a-form :form="form">
 
       <a-form-item
           label="品牌"
@@ -8,11 +8,10 @@
           :wrapperCol="wrapperCol">
         <a-select
             :filter-option="true"
-            placeholder="请选择"
             show-search
+            :disabled="true"
             v-decorator="[
-            'brandId',
-            {rules: [{ required: true, message: '请选择品牌'}]}]"
+            'brandId']"
         >
           <a-select-option v-for="brand in brands" :key="brand.id">
             {{ brand.name }}
@@ -27,13 +26,9 @@
           hasFeedback
       >
         <a-input
-            placeholder="请输入名字"
+            :disabled="true"
             v-decorator="[
-            'model',
-            {rules: [{ required: true, message: '请输入品牌名字'},
-          { min: 2, max: 200, message: '长度在 2 到 200个字符' },
-          { type: 'string', required: true, pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9]{2,200}$/, message: '由汉字数字字母下划线组成'}]}
-          ]"
+            'model']"
         ></a-input>
       </a-form-item>
 
@@ -41,9 +36,6 @@
           v-bind="buttonCol"
       >
         <a-row>
-          <a-col :xs="{ span: 5, offset: 5 }" :lg="{ span: 5, offset: 5 }">
-            <a-button type="primary" html-type="submit">提交</a-button>
-          </a-col>
           <a-col :xs="{ span: 5, offset: 6}" :lg="{ span: 5, offset: 6 }">
             <a-button @click="handleGoBack">返回</a-button>
           </a-col>
@@ -58,7 +50,7 @@
   import request from '@/utils/request'
   import pick from 'lodash.pick'
   export default {
-    name: 'TableEdit',
+    name: 'TableDetail',
     props: {
       record: {
         type: [Object, String],
@@ -83,7 +75,6 @@
         },
         form: this.$form.createForm(this),
         id: 0,
-        version: '',
         brands: [{
           id: '',
           name: ''
@@ -113,16 +104,6 @@
       this.handleSearch()
     },
     methods: {
-      validatePriceBlur (e) {
-        const validatePriceReg = /(^[1-9]\d*(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/
-        if (e.target.value && !validatePriceReg.toString().test(e.target.value)) {
-          const arr = [{
-            message: '请输入正确的价格（单元：元）!',
-            field: 'price'
-          }]
-          this.form.setFields({ phone: { value: e.target.value, errors: arr } })
-        }
-      },
       handleSearch () {
         request({
           url: '/stb/brands/v1',
@@ -139,37 +120,22 @@
       handleGoBack () {
         this.$emit('onGoBack')
       },
-      handleSubmit (e) {
-        const { form: { validateFields } } = this
-        e.preventDefault()
-        validateFields((err, values) => {
-          values.id = this.id
-          values.version = this.version
-          console.log('values', JSON.stringify(values))
-          if (!err) {
-            request({
-              url: '/stb/model/v1',
-              method: 'POST',
-              data: values
-            }).then(ret => {
-              if (ret.statusCode === 2000) {
-                this.$message.success(ret.msg)
-                this.form.resetFields()
-                this.handleGoBack()
-              } else {
-                this.$message.error(ret.msg)
-              }
-            })
-          }
-        })
-        return false
+      validateNameBlur (e) {
+        const validateNameReg = /^[\u4e00-\u9fa5_a-zA-Z0-9]{2,200}$/
+        if (e.target.value || !validateNameReg.test(e.target.value)) {
+          console.log('e', e)
+          const arr = [{
+            message: '由汉字数字字母下划线组成!',
+            field: 'name'
+          }]
+          this.form.setFields({ name: { value: e.target.value, errors: arr } })
+        }
       },
       handleGetInfo () {
         console.log(`将加载 ${this.id} 信息到表单`)
       },
       loadEditInfo (data) {
         this.id = data.id
-        this.version = data.version
         const { form } = this
         console.log(`将加载 ${data.id} 信息到表单`)
         const formData = pick(data, ['model', 'brandId'])

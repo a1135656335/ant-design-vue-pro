@@ -117,6 +117,7 @@
         },
         form: this.$form.createForm(this),
         id: 0,
+        version: '',
         brands: [{
           id: '',
           name: ''
@@ -188,11 +189,12 @@
         e.preventDefault()
         validateFields((err, values) => {
           values.id = this.id
+          values.version = this.version
           console.log('values', JSON.stringify(values))
           if (!err) {
             request({
               url: '/stb/stbType/v1',
-              method: 'PUT',
+              method: 'POST',
               data: values
             }).then(ret => {
               if (ret.statusCode === 2000) {
@@ -213,6 +215,7 @@
       loadEditInfo (data) {
         this.queryModelId(data.brandId)
         this.id = data.id
+        this.version = data.version
         const { form } = this
         console.log(`将加载 ${data.id} 信息到表单`)
         const formData = pick(data, ['stbType', 'price', 'status', 'modelId', 'brandId'])

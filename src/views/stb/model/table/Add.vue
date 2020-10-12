@@ -56,7 +56,7 @@
 
 <script>
   import request from '@/utils/request'
-  import pick from 'lodash.pick'
+
   export default {
     name: 'TableEdit',
     props: {
@@ -83,7 +83,6 @@
         },
         form: this.$form.createForm(this),
         id: 0,
-        version: '',
         brands: [{
           id: '',
           name: ''
@@ -113,16 +112,6 @@
       this.handleSearch()
     },
     methods: {
-      validatePriceBlur (e) {
-        const validatePriceReg = /(^[1-9]\d*(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/
-        if (e.target.value && !validatePriceReg.toString().test(e.target.value)) {
-          const arr = [{
-            message: '请输入正确的价格（单元：元）!',
-            field: 'price'
-          }]
-          this.form.setFields({ phone: { value: e.target.value, errors: arr } })
-        }
-      },
       handleSearch () {
         request({
           url: '/stb/brands/v1',
@@ -139,17 +128,25 @@
       handleGoBack () {
         this.$emit('onGoBack')
       },
+      validateNameBlur (e) {
+        const validateNameReg = /^[\u4e00-\u9fa5_a-zA-Z0-9]{2,200}$/
+        if (e.target.value || !validateNameReg.test(e.target.value)) {
+          console.log('e', e)
+          const arr = [{
+            message: '由汉字数字字母下划线组成!',
+            field: 'name'
+          }]
+          this.form.setFields({ name: { value: e.target.value, errors: arr } })
+        }
+      },
       handleSubmit (e) {
         const { form: { validateFields } } = this
         e.preventDefault()
         validateFields((err, values) => {
-          values.id = this.id
-          values.version = this.version
-          console.log('values', JSON.stringify(values))
           if (!err) {
             request({
               url: '/stb/model/v1',
-              method: 'POST',
+              method: 'PUT',
               data: values
             }).then(ret => {
               if (ret.statusCode === 2000) {
@@ -162,17 +159,14 @@
             })
           }
         })
-        return false
       },
       handleGetInfo () {
         console.log(`将加载 ${this.id} 信息到表单`)
       },
       loadEditInfo (data) {
-        this.id = data.id
-        this.version = data.version
         const { form } = this
         console.log(`将加载 ${data.id} 信息到表单`)
-        const formData = pick(data, ['model', 'brandId'])
+        const formData = { model: '', brandId: '' }
         form.setFieldsValue(formData)
       }
     }

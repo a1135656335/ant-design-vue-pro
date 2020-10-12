@@ -18,9 +18,10 @@ const request = axios.create({
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
  */
 const toLogin = () => {
-  store.dispatch('Logout').then(() => {
-    route.push({ name: 'login' })
-  })
+  store.commit('SET_TOKEN', '')
+  store.commit('SET_ROLES', [])
+  storage.remove(ACCESS_TOKEN)
+  route.push({ name: 'login' })
   console.log('退出')
 }
 
@@ -71,31 +72,46 @@ const customeErrorHandler = (response) => {
         return dataAxios
       case 3004:
         // [ 示例 ] 其它和后台约定的 code
-        notification.warning(dataAxios.msg)
+        notification.warning({
+          message: 'Forbidden',
+          description: dataAxios.msg
+        })
         toLogin()
         // errorCreate(`[ code: 3004 ] ${dataAxios.msg}: ${response.config.url}`)
         break
       case 3007:
         // [ 示例 ] 其它和后台约定的 code
-        notification.warning(dataAxios.msg)
+        notification.warning({
+          message: 'Forbidden',
+          description: dataAxios.msg
+        })
         toLogin()
         // errorCreate(`[ code: 3007 ] ${dataAxios.msg}: ${response.config.url}`)
         break
       case 3008:
         // [ 示例 ] 其它和后台约定的 code
-        notification.warning(dataAxios.msg)
+        notification.warning({
+          message: 'Forbidden',
+          description: dataAxios.msg
+        })
         toLogin()
         // errorCreate(`[ code: 3008 ] ${dataAxios.msg}: ${response.config.url}`)
         break
       case 3009:
         // [ 示例 ] 其它和后台约定的 code
-        notification.warning(dataAxios.msg)
+        notification.warning({
+          message: 'Forbidden',
+          description: dataAxios.msg
+        })
         toLogin()
         // errorCreate(`[ code: 3009 ] ${dataAxios.msg}: ${response.config.url}`)
         break
       case 3010:
         // [ 示例 ] 其它和后台约定的 code
-        notification.warning(dataAxios.msg)
+        notification.warning({
+          message: 'Forbidden',
+          description: dataAxios.msg
+        })
         toLogin()
         // errorCreate(`[ code: 3010 ] ${dataAxios.msg}: ${response.config.url}`)
         break
